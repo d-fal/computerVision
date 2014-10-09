@@ -1,0 +1,42 @@
+Download Cmake
+Download Qt-Mingw
+Download OpenCV
+
+variable path: 
+C:\Qt\Qt5.3.2\Tools\mingw482_32\bin;
+C:\Qt\Qt5.3.2\Tools\QtCreator\bin;
+C:\Qt\Qt5.0.1\Tools\MinGW\bin;
+C:\Qt\Qt5.0.1\5.0.1\mingw47_32\bin
+
+
+open cmake
+configure with mingw makefile
+
+check WITH_QT
+uncheck CUDA, 
+CMAKE_TYPE: Debug
+
+click configure untill red lines erased.
+click generate
+
+navigate to L:
+c:\opencv\opencv_bin
+
+$cmd: mingw32-make
+mingw32-make install
+
+add 
+C:\OpenCV\opencv_bin\install\x64\mingw\bin;
+to variable path
+
+Add these lines to project.pro file:
+
+
+INCLUDEPATH += C:\OpenCV\opencv_bin\install\include
+
+LIBS += -LC:\\OpenCV\\opencv_bin\\install\\x64\\mingw\\lib \
+    libopencv_core249 \
+    libopencv_highgui249 \
+    libopencv_imgproc249 \
+    libopencv_features2d249 \
+    libopencv_calib3d249
