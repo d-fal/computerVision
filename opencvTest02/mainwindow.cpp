@@ -38,19 +38,20 @@ image=imageRGB.clone();
     cd.instantiateValues(150,50,100,90);
     //imshow("",image_gray);
     // change color channel ordering
-    image=cd.process(image);
+   image=cd.process(image);
 
 
     // Qt image
     imshow("",image);
     cv::cvtColor(image,image,CV_BGR2RGB);
     waitKey(37);
+    /*
     QImage img= QImage((const unsigned char*)(image.data),
     image.cols,image.rows,QImage::Format_RGB888);
     // display on label
     ui->label->setPixmap(QPixmap::fromImage(img).scaled(500,500));
     // resize the label to fit the image
-
+    */
 
 }
 
@@ -58,3 +59,4 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
