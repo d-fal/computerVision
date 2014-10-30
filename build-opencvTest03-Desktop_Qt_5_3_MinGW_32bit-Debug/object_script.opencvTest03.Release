@@ -1,0 +1,12 @@
+INPUT(
+./release/main.o
+./release/mainwindow.o
+./release/colordetect.o
+./release/histogram1d.o
+./release/watershedsegmenter.o
+./release/preprocessing.o
+./release/characterrecognition.o
+./release/humomments.o
+./release/readcharacterdata.o
+./release/moc_mainwindow.o
+);

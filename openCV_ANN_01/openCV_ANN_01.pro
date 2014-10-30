@@ -1,37 +1,21 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2014-10-12T15:59:04
+# Project created by QtCreator 2014-10-28T08:45:49
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       -= gui
 
-TARGET = opencvTest03
+TARGET = openCV_ANN_01
+CONFIG   += console
+CONFIG   -= app_bundle
+
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    colordetect.cpp \
-    histogram1d.cpp \
-    watershedsegmenter.cpp \
-    preprocessing.cpp \
-    characterrecognition.cpp \
-    humomments.cpp \
-    readcharacterdata.cpp
-
-HEADERS  += mainwindow.h \
-    colordetect.h \
-    histogram1d.h \
-    watershedsegmenter.h \
-    preprocessing.h \
-    characterrecognition.h \
-    humomments.h \
-    readcharacterdata.h
-
-FORMS    += mainwindow.ui
+SOURCES += main.cpp
 
 INCLUDEPATH += C:\OpenCV\myBuild\install\include
 
@@ -51,4 +35,5 @@ LIBS += -LC:\\OpenCV\\myBuild\\install\\x64\\mingw\\lib \
     libopencv_superres249d \
     libopencv_video249d \
     libopencv_videostab249d\
-    libopencv_ml249d
+    libopencv_ml249d\
+    libopencv_photo249d

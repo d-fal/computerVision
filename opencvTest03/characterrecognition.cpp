@@ -11,7 +11,7 @@ thresh=0;
 int characterRecognition::charRecognition(const Mat &image){
 
 int minPos=-1,minVal,formerMinVal=10000;
-Size size(4*image.cols,4*image.rows);
+Size size(8*image.cols,8*image.rows);
 //(image.cols,image.rows,CV_8UC1);
 for(int i=0;i<=9;++i){
 Mat sample,test;

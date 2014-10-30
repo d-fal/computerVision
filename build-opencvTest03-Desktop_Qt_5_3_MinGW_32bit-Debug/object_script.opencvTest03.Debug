@@ -1,0 +1,12 @@
+INPUT(
+./debug/main.o
+./debug/mainwindow.o
+./debug/colordetect.o
+./debug/histogram1d.o
+./debug/watershedsegmenter.o
+./debug/preprocessing.o
+./debug/characterrecognition.o
+./debug/humomments.o
+./debug/readcharacterdata.o
+./debug/moc_mainwindow.o
+);

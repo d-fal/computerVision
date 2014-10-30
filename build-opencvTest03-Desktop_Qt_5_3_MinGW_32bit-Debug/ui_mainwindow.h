@@ -32,6 +32,9 @@ public:
     QPushButton *pushButton_3;
     QPushButton *pushButton_4;
     QPushButton *pushButton_5;
+    QPushButton *pushButton_6;
+    QPushButton *pushButton_7;
+    QPushButton *pushButton_8;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -58,6 +61,15 @@ public:
         pushButton_5 = new QPushButton(centralWidget);
         pushButton_5->setObjectName(QStringLiteral("pushButton_5"));
         pushButton_5->setGeometry(QRect(210, 140, 151, 28));
+        pushButton_6 = new QPushButton(centralWidget);
+        pushButton_6->setObjectName(QStringLiteral("pushButton_6"));
+        pushButton_6->setGeometry(QRect(20, 20, 151, 28));
+        pushButton_7 = new QPushButton(centralWidget);
+        pushButton_7->setObjectName(QStringLiteral("pushButton_7"));
+        pushButton_7->setGeometry(QRect(20, 50, 151, 28));
+        pushButton_8 = new QPushButton(centralWidget);
+        pushButton_8->setObjectName(QStringLiteral("pushButton_8"));
+        pushButton_8->setGeometry(QRect(20, 80, 151, 28));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -83,6 +95,9 @@ public:
         pushButton_3->setText(QApplication::translate("MainWindow", "Filtering", 0));
         pushButton_4->setText(QApplication::translate("MainWindow", "Lines", 0));
         pushButton_5->setText(QApplication::translate("MainWindow", "Countours", 0));
+        pushButton_6->setText(QApplication::translate("MainWindow", "Learn", 0));
+        pushButton_7->setText(QApplication::translate("MainWindow", "Compare", 0));
+        pushButton_8->setText(QApplication::translate("MainWindow", "Create Training Set", 0));
     } // retranslateUi
 
 };

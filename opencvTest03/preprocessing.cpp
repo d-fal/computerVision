@@ -50,7 +50,7 @@ std::vector<int> preProcessing::drawHorizontalLines(const Mat &image){
     }
 
     if(flag && !wasLineHere){
-        line(result,Point(0,j),Point(nc,j),Scalar(0,0,255),2,8);
+      //  line(result,Point(0,j),Point(nc,j),Scalar(0,0,255),2,8);
         wasLineHere=true;
         vec.push_back(j);
     } else wasLineHere=false;
@@ -72,7 +72,7 @@ cv::Mat preProcessing::detectCharacters(const Mat &image){
     }
     std::vector<int> vec=drawHorizontalLines(binary);
     for(unsigned int i=0;i<vec.size();++i){
-    line(image2,Point(0,vec[i]),Point(image.cols,vec[i]),Scalar(0,0,255),2,1);
+    //line(image2,Point(0,vec[i]),Point(image.cols,vec[i]),Scalar(0,0,255),2,1);
 
     }
     vector<vector<cv::Point> > contours;
@@ -146,7 +146,7 @@ if(flag2 && !flag3){
            int val=ocr.charRecognition(roi);
            if(val!=-1){
                QString label=QString::number(val);
-               putText(result, label.toStdString(), center, FONT_HERSHEY_PLAIN, 1.0, CV_RGB(0,255,0), 2.0);
+               putText(result, label.toStdString(), center, FONT_HERSHEY_PLAIN, 1.0, Scalar(0,255,100), 2.0);
            //cout<<start.y/10<<" - "<<val<<endl;
 }
            }
@@ -155,7 +155,7 @@ if(flag2 && !flag3){
     }
    // cout<<"Contour size: "<<contours.size()<<"\neffective: "<<reserved.size()<<"\n end"<<endl;
 
-   imshow("",result+.7*image2);
+   imshow("",result+.8*image2);
 return result;
     //imshow("",.7*image);
 
