@@ -11,7 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
         humomments  hu;
 
         //cout<<ocr.charRecognition(img)<<endl;
-        imageRGB=imread("C:\\example\\test01.jpg");
+        imageRGB=imread("C:\\example\\test\\test_4.jpg");
+        cv::resize(imageRGB,imageRGB,Size(1400,1000),0,0);
         image=imageRGB.clone();
         medianBlur(image,image,3);
         logo = imread("C:\\example\\logo.png");
@@ -25,8 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
         threshold(img,img,0,255,THRESH_OTSU);
         vector<float> result=hu.calculateHuMomments(img==0);
 
-        for(int i=0;i<result.size();++i) cout<<i+1<<"th: "<<result[i]<< " - ";
-       cout<<endl;
+        //for(int i=0;i<result.size();++i) cout<<i+1<<"th: "<<result[i]<< " - ";
+       //cout<<endl;
         }
         Mat img=imread("C:\\example\\samples\\img_3.png");
         cvtColor(img,img,CV_RGB2GRAY);
@@ -35,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
         cv::Moments mom=cv::moments(img==0,true);
         double hum[7];
         cv::HuMoments(mom, hum);
-        for(int i=0;i<7;++i) cout<<i+1<<"th: "<<hum[i]<<" - ";
+       //for(int i=0;i<7;++i) cout<<i+1<<"th: "<<hum[i]<<" - ";
 
         imageROI=imageRGB(cv::Rect(imageRGB.cols-logo.cols-1,imageRGB.rows-logo.rows-1,logo.cols,logo.rows));
         //cout<<"logo : "<<logo.cols<<" x "<<logo.rows<<"\nImage: "<<imageRGB.cols<<" x "<<imageRGB.rows<<
@@ -259,8 +260,8 @@ void MainWindow::on_pushButton_6_clicked()
         //
         cv::Mat classificationResult(1, CLASSES, CV_32F);
         //load the training and test data sets.
-        read_dataset("C:\\example\\trainingset.txt", training_set, training_set_classifications, TRAINING_SAMPLES);
-        read_dataset("C:\\example\\testset.txt", test_set, test_set_classifications, TEST_SAMPLES);
+        read_dataset("C:\\example\\newDataset.txt", training_set, training_set_classifications, TRAINING_SAMPLES);
+        read_dataset("C:\\example\\newTestset.txt", test_set, test_set_classifications, TEST_SAMPLES);
             // define the structure for the neural network (MLP)
             // The neural network has 3 layers.
             // - one input node per attribute in a sample so 256 input nodes
@@ -296,7 +297,7 @@ void MainWindow::on_pushButton_6_clicked()
             printf( "Training iterations: %i\n\n", iterations);
 
             // Save the model generated into an xml file.
-            CvFileStorage* storage = cvOpenFileStorage( "C:\\example\\param.xml", 0, CV_STORAGE_WRITE );
+            CvFileStorage* storage = cvOpenFileStorage( "C:\\example\\param2.xml", 0, CV_STORAGE_WRITE );
             nnetwork.write(storage,"DigitOCR");
             cvReleaseFileStorage(&storage);
 
@@ -396,47 +397,77 @@ void MainWindow::on_pushButton_6_clicked()
 
 void MainWindow::on_pushButton_7_clicked()
 {
-        CvANN_MLP nnetwork;
-        CvFileStorage* storage = cvOpenFileStorage( "C:\\example\\param.xml", 0, CV_STORAGE_READ );
-        CvFileNode *n = cvGetFileNodeByName(storage,0,"DigitOCR");
-        nnetwork.read(storage,n);
-        cvReleaseFileStorage(&storage);
 
-        Mat data=imread("C:\\example\\test_4.png");
-        cvtColor(data,data,CV_BGR2GRAY);
-        cv::Mat result1(1,ATTRIBUTES,CV_32F);
-        readCharacterData rdChar;
-        rdChar.removeWhitespaces(data,data);
-        rdChar.alignPixels(data, result1);
-        // ... data for the digit to be recognized
-
-        int maxIndex = 0;
-        cv::Mat classOut(1,CLASSES,CV_8U);
-
-
-
-        cout<<"\nSize:"<<classOut.rows<<"  x  "<<classOut.cols<<endl;
-        //cout<<(data1>128)<<endl;
-        //prediction
-        //cout<<test_sample<<endl;
-
-        nnetwork.predict(result1, classOut);
-        float value;
-        float maxValue=classOut.at<float>(0,0);
-        for(int index=1;index<CLASSES;index++)
-        {   value = classOut.at<float>(0,index);
-                if(value>maxValue)
-                {   maxValue = value;
-                    maxIndex=index;
-                }
+       characterRecognition ocr;
+int maxIndex;
+for(int k=0;k<=9;++k){
+        QString address="C:\\example\\samples\\img_"+QString::number(k)+".png";
+        Mat data=imread(address.toStdString(),0);
+        maxIndex=ocr.charRecognitionANN(data);
+        cout<<"\n"<<k<<" appears to be like: "<<maxIndex<<endl;
         }
-               cout<<"\nThe result is:"<<maxIndex<<endl;
+
 
 }
 
 void MainWindow::on_pushButton_8_clicked()
 {
     ofstream newFile;
+    ofstream newTest;
+    newFile.open("C:\\example\\newDataset.txt");
+    newTest.open("C:\\example\\newTestset.txt");
+    //newFile<<"This is a test!";
 
+    readCharacterData rdChar;
+
+     for(int j=0;j<=300;++j){
+          for(int i=0;i<=9;++i){
+        QString path="C:\\example\\Training\\"+QString::number(i)+"\\s"+QString::number(j)+".png";
+
+        Mat img=imread(path.toStdString(),0);
+        cv::Mat result1(1,ATTRIBUTES,CV_32F);
+
+        rdChar.removeWhitespaces(img,img);
+        rdChar.alignPixels(img, result1);
+        //cout<<path.toStdString()<<"  |  "<<img.rows<<" x "<<img.cols<<endl;
+        //imshow("",img);
+        int charArray;
+
+        for(int k=0;k<ATTRIBUTES;++k){
+
+        charArray=result1.at<int>(k)>0?1:0;
+        if(j<100) newTest<<charArray<<",";
+        newFile<<charArray<<",";
+        }
+        if(j<100){
+            newTest<<i;
+            newTest<<"\n";
+
+        }
+        newFile<<i;
+        newFile<<"\n";
+        img.release();
+        result1.release();
+     }
+    }
+newFile.close();
+}
+
+void MainWindow::on_pushButton_9_clicked()
+{
+
+
+         for(int i=0;i<=5;++i){
+
+
+       for (int k=47;k<=300;++k){
+           QString path="C:\\example\\Training\\"+QString::number(i)+"\\s"+QString::number((int)46*rand()/RAND_MAX)+".png";
+           Mat img=imread(path.toStdString(),0);
+           QString path2="C:\\example\\Training\\"+QString::number(i)+"\\s"+QString::number(k)+".png";
+           imwrite(path2.toStdString(),img);
+       }
+
+
+    }
 
 }

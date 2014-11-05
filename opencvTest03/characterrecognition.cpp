@@ -36,3 +36,44 @@ if(minVal<formerMinVal && minVal>thresh){
 //imwrite("C:\\example\\img01.png",sample);
 return minPos;
 }
+
+int characterRecognition::charRecognitionANN(const Mat &image){
+    CvANN_MLP nnetwork;
+    CvFileStorage* storage = cvOpenFileStorage( "C:\\example\\param2.xml", 0, CV_STORAGE_READ );
+    CvFileNode *n = cvGetFileNodeByName(storage,0,"DigitOCR");
+    nnetwork.read(storage,n);
+    cvReleaseFileStorage(&storage);
+    readCharacterData rdChar;
+
+Mat data;
+if(image.channels()==3){
+    cvtColor(image,data,CV_RGB2GRAY);
+
+} else{
+     data=image;
+}
+    //cvtColor(data,data,CV_BGR2GRAY);
+    cv::Mat result1(1,ATTRIBUTES,CV_32F);
+    rdChar.removeWhitespaces(data,data);
+    rdChar.alignPixels(data, result1);
+
+    int maxIndex = 0;
+    cv::Mat classOut(1,CLASSES,CV_8U);
+
+
+    nnetwork.predict(result1, classOut);
+    float value;
+    float maxValue=classOut.at<float>(0,0);
+    for(int index=1;index<CLASSES;index++)
+    {   value = classOut.at<float>(0,index);
+            if(value>maxValue)
+            {   maxValue = value;
+                maxIndex=index;
+            }
+    }
+data.release();
+return maxIndex;
+
+
+
+}

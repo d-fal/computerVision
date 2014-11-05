@@ -67,7 +67,5 @@ void readCharacterData::removeWhitespaces(const Mat &image, Mat &result){
     //cout<<"left: "<<left<<" , right: "<<right<<" , top: "<<top<<" , bottom: "<<bottom<<endl;
     //rectangle(img,Point(left-1,top-1),Point(right+1,bottom+1),Scalar(255,0,0),.5,8,0);
 
-
-
-
 }
+

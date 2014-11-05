@@ -35,6 +35,7 @@ public:
     QPushButton *pushButton_6;
     QPushButton *pushButton_7;
     QPushButton *pushButton_8;
+    QPushButton *pushButton_9;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -70,6 +71,9 @@ public:
         pushButton_8 = new QPushButton(centralWidget);
         pushButton_8->setObjectName(QStringLiteral("pushButton_8"));
         pushButton_8->setGeometry(QRect(20, 80, 151, 28));
+        pushButton_9 = new QPushButton(centralWidget);
+        pushButton_9->setObjectName(QStringLiteral("pushButton_9"));
+        pushButton_9->setGeometry(QRect(210, 190, 151, 28));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -98,6 +102,7 @@ public:
         pushButton_6->setText(QApplication::translate("MainWindow", "Learn", 0));
         pushButton_7->setText(QApplication::translate("MainWindow", "Compare", 0));
         pushButton_8->setText(QApplication::translate("MainWindow", "Create Training Set", 0));
+        pushButton_9->setText(QApplication::translate("MainWindow", "Add fake data", 0));
     } // retranslateUi
 
 };

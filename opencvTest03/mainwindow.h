@@ -18,11 +18,15 @@
 #include "humomments.h"
 #include "readcharacterdata.h"
 #include <fstream>
+#include <windows.h>
 
-#define TRAINING_SAMPLES 3050       //Number of samples in training dataset
+//#define TRAINING_SAMPLES 3050       //Number of samples in training dataset
 #define ATTRIBUTES 256  //Number of pixels per sample.16X16
-#define TEST_SAMPLES 1170       //Number of samples in test dataset
+//#define TEST_SAMPLES 1170       //Number of samples in test dataset
 #define CLASSES 10                  //Number of distinct labels.
+#define TRAINING_SAMPLES 4600       //Number of samples in training dataset
+#define TEST_SAMPLES 500       //Number of samples in test dataset
+
 
 using namespace cv;
 using namespace std;
@@ -59,6 +63,8 @@ private slots:
     void on_pushButton_7_clicked();
 
     void on_pushButton_8_clicked();
+
+    void on_pushButton_9_clicked();
 
 private:
     Ui::MainWindow *ui;

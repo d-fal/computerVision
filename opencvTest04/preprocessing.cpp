@@ -1,80 +1,16 @@
 #include "preprocessing.h"
 
-preProcessing::preProcessing()
-{
-}
-
-cv::Mat preProcessing::process(const Mat &image){
-    Mat blurred,binary2;
-
-    cv::GaussianBlur(image,blurred,cv::Size(5,5),3);
-    cvtColor(blurred,binary,CV_RGB2GRAY);
-    threshold(binary,binary,0,255,THRESH_OTSU);
-    binary=255-binary;
-
-
-    erode(binary,binary2,Mat(),Point(-1,-1),2);
-    binary=binary-binary2;
-    Mat sobelY;
-    cv::Sobel(binary,sobelY,CV_8U,0,1,3,0.4,128);
-    cv::Sobel(sobelY,sobelY,CV_8U,1,0,3,0.4,128);
-    //threshold(sobelY,binary,0,255,THRESH_OTSU);
-    binary=sobelY>180;
-    erode(binary,binary,Mat(),Point(-1,-1),1);
-    //blur(binary,binary,Size(3,3),Point(-1,-1));
-    return binary;
+preprocessing::preprocessing(){
 
 }
 
-std::vector<int> preProcessing::drawHorizontalLines(const Mat &image){
-    cv::Mat result(image.rows,image.cols,CV_8UC3);
-    std::vector<int> vec;
-    int nl= image.rows; // number of lines
-    // total number of elements per line
-    int nc= image.cols;
-    bool wasLineHere=false;
-    for (int j=0; j<nl; j++) {
-        bool flag=false;
+cv::Mat preprocessing::detectCharacters(const Mat &image){
 
-    // get the address of row j
-    const uchar* current=image.ptr<const uchar>(j);
-    //Vec3b* output=result.ptr<Vec3b>(j);
-    for(int i=0;i<nc;++i){
-        uchar pix=current[i];
-        if(pix>120){
-            flag=true;
-            j+=5;
-            break;
-        }
-
-    }
-
-    if(flag && !wasLineHere){
-      //  line(result,Point(0,j),Point(nc,j),Scalar(0,0,255),2,8);
-        wasLineHere=true;
-        vec.push_back(j);
-    } else wasLineHere=false;
-
-    }
-    return vec;
-}
-
-cv::Mat preProcessing::detectCharacters(const Mat &image){
 
 
     Mat image2=image.clone();
+    Mat binary=image;
 
-    cv::Mat binary=process(image);
-    colorDetect cd;
-    vector<int> res=cd.verticalLines(image);
-    for(unsigned int i=0;i<res.size();++i){
-    line(image2,Point(res[i],0),Point(res[i],image.rows),Scalar(255,0,0),1,1);
-    }
-    std::vector<int> vec=drawHorizontalLines(binary);
-    for(unsigned int i=0;i<vec.size();++i){
-    //line(image2,Point(0,vec[i]),Point(image.cols,vec[i]),Scalar(0,0,255),2,1);
-
-    }
     vector<vector<cv::Point> > contours;
     vector<Vec4i> hierarchy;
     Mat image_canny,image_gray;
@@ -115,14 +51,7 @@ cv::Mat preProcessing::detectCharacters(const Mat &image){
                        }
            }
 
-           for(unsigned int k=0;k<vec.size();++k){
-            if(center.y<vec[k]+10 && center.y>vec[k]-10){
-                reserved.push_back(center);
-                flag2=true;
-                break;
 
-               }
-           }
 if(flag2 && !flag3){
            float wid=radius;
            Point start=center-Point2f(wid,wid);
