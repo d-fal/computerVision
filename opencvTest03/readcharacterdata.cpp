@@ -24,7 +24,12 @@ void readCharacterData::removeWhitespaces(const Mat &image, Mat &result){
     Mat bin;
 
     threshold(image,bin,0,256,THRESH_OTSU);
+
+
+//    Mat kernel(2,2,CV_8U,Scalar(1));
+
     Mat image2=(bin==0);
+  //  morphologyEx(bin,bin,CV_MOP_CLOSE,kernel);
     int w=image.cols;
     int h=image.rows;
     int left=0;
@@ -61,7 +66,7 @@ void readCharacterData::removeWhitespaces(const Mat &image, Mat &result){
 
     Rect roi(left,top,right-left,bottom-top);
     result=bin(roi);
-    cv::resize(result,result,Size(16,16),0,0,INTER_LINEAR);
+    cv::resize(result,result,Size(20,20),0,0,INTER_LINEAR);
 
     //cvtColor(image,img,CV_GRAY2BGR);
     //cout<<"left: "<<left<<" , right: "<<right<<" , top: "<<top<<" , bottom: "<<bottom<<endl;

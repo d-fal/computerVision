@@ -3,17 +3,22 @@
 imageAnalysis::imageAnalysis()
 {
 refVAspect=800;
-refHAspect=700;
+refHAspect=800;
 }
 
 void imageAnalysis::startIt(){
+    Mat imgXX = imread("C:\\example\\test\\test_9.jpg");
+    blur(imgXX,imgXX,Size(11,11));
+    imwrite("C:\\example\\tst.jpg",imgXX);
+    imshow("",imgXX);
     characterRecognition CR;
-    image=imread("c:\\example\\Test\\test_1.jpg");
+    image=imread("c:\\example\\Test\\test_11.jpg");
+    resize(image,image,Size(1200,800),-1,-1);
     if(image.channels()!=1){
         cvtColor(image,image,CV_BGR2GRAY);
     }
     //resize(image,image,Size(1200,1200),0,0);
-    Mat img2,imgRef;
+    Mat img2,imgRef,idfieldtemp;
 
     cvtColor(image,img2,CV_GRAY2BGR);
 
@@ -28,18 +33,42 @@ void imageAnalysis::startIt(){
     rightMargin  = coords[1];
     topMargin    = coords[2];
     bottomMargin = coords[3];
+    cout<<"values: "<<coords[0]<<" , "<<coords[1]<<" ,, "<<coords[2]<<" ,,, "<<coords[3]<<endl;
     photoID=refImage(Rect(coords[0],coords[2],coords[1]-coords[0],coords[3]-coords[2]));
-    vector<int> margins=detectTextarea();
-    CR.topBound      = margins[0];
-    CR.belowBound    = margins[1];
-    CR.leftTextArea  = margins[2];
-    CR.rightTextArea = margins[3];
+    idField=refImage(Rect(2*coords[1],coords[2],coords[1]+coords[1]-coords[0],coords[2]+coords[1]-coords[0]));
+    idfieldtemp=image(Rect(2*coords[1],coords[2],coords[1]+coords[1]-coords[0],coords[2]+coords[1]-coords[0]));
 
-    for (int i=4 ; i < margins.size() ; ++i ) CR.imgRows.push_back(margins[i]);
+    vector<int> margins=detectTextarea();
+    CR.topBound      = margins[0] ;
+    CR.belowBound    = margins[1] ;
+    CR.leftTextArea  = margins[2] ;
+    CR.rightTextArea = margins[3] ;
+    CR.remarksPanel  = rightMargin;
+    CR.originalImage = refImage   ;
+    for (int i=4 ; i < margins.size() ; ++i ) CR.imgRows.push_back(margins[i]+margins[0]);
     //CR.topBound
-    CR.detectCharacters(imgRef);
+    CR.detectCharacters(image);
+
+
+    cout<<"\nid rows:\n";
+
+    cout<<"\n----------\n";
+    vector<POIs> interests=CR.detectIdNo(idField);
+    vector<int> idRows=findRows(idfieldtemp);
+    //interests = CR.alignContours(interests,idRows);
+    //cout<<"\n"<<interests.size()<<" I\SIZE\n";
+    for (int i=0;i<interests.size();++i){
+    //cout<<"INTerest: "<<interests[i].yPos<<" , "<<interests[i].row<<endl;
+    rectangle(idField,Point(interests[i].xPos-interests[i].radius,interests[i].row-interests[i].radius)
+              ,Point(interests[i].xPos+interests[i].radius,interests[i].row+interests[i].radius),Scalar(0,0,255),1);
+    }
+    for (int i=0 ; i < idRows.size() ; ++i) {
+     cout<<idRows[i]<<" , ";
+     line(idField,Point(0,idRows[i]),Point(idField.cols,idRows[i]),Scalar(255,0,0),2);
+    }
+    //imshow("IH",idField);
     //Mat imgX=pre.detectCharacters(image);
-    imshow("id",refImage);
+    //imshow("id",refImage);
 }
 
 vector<int> imageAnalysis::findPicture(void){
@@ -50,8 +79,13 @@ vector<int> imageAnalysis::findPicture(void){
     int top=0,bottom=refVAspect-1,left=0,right=refHAspect-1;
 
     Mat imgx;
-
+try{
     resize(image,imgx,Size(refHAspect,refVAspect),0,0);
+    } catch(cv::Exception& e){
+        const char* err_msg = e.what();
+        std::cout << "exception caught: " << err_msg << std::endl;
+
+    }
     Mat element(50,20,CV_8U,cv::Scalar(1));
     erode(imgx,imgx,element);
     for(int r=1;r<refVAspect;++r){
@@ -87,7 +121,7 @@ vector<int> imageAnalysis::findPicture(void){
     }
     }
 
-    result.push_back((left-10)*hAspect);
+    result.push_back((left)*hAspect);
     result.push_back((right+10)*hAspect);
     result.push_back((top-10)*vAspect);
     result.push_back((bottom+10)*vAspect);
@@ -95,7 +129,7 @@ vector<int> imageAnalysis::findPicture(void){
     // SET SELECTED PART OF IMAGE TO ZERO
     for(int j=.6*result[2];j<result[3];++j){
         uchar* current = image.ptr<uchar>(j);
-        for(int i=0;i<image.cols;++i){
+        for(int i=6*result[1];i<image.cols;++i){
             if(i<1.1*result[1] || i>(2.1*result[1]-result[0]))
             current[i]*=0;
         }
@@ -111,7 +145,13 @@ std::vector<int> imageAnalysis::detectTextarea(){
     float vAspect=image.rows/refVAspect;
     Mat resizeImage;
     //resize(image,imgx,Size(refHAspect,refVAspect),0,0);
-    resize(image,resizeImage,Size(refHAspect,refVAspect),0,0);
+    try{
+        resize(image,resizeImage,Size(refHAspect,refVAspect),0,0);
+        } catch(cv::Exception& e){
+            const char* err_msg = e.what();
+            std::cout << "exception caught: " << err_msg << std::endl;
+
+        }
     Mat element1(5,30,CV_8U,cv::Scalar(1));
     erode(resizeImage,resizeImage,element1);
     Sobel(resizeImage,resizeImage,CV_8U,1,0,3,1,128);
@@ -155,13 +195,13 @@ std::vector<int> imageAnalysis::detectTextarea(){
     vector<int> imgRows=findRows(scoresBlock);
     int m=1;
     for(int i=0; i<imgRows.size() ; ++i){
-     line(refImage,Point(0,imgRows[i]+top),Point(refImage.cols,imgRows[i]+top),Scalar(0,150,150),2);
-     putText(refImage,(QString::number(m)).toStdString(),
-             Point(refImage.cols*.95,imgRows[i]+top),CV_FONT_NORMAL,1,Scalar(255,20,10));
+     //line(refImage,Point(0,imgRows[i]+top),Point(refImage.cols,imgRows[i]+top),Scalar(0,150,150),2);
+     //putText(refImage,(QString::number(m)).toStdString(),
+       //      Point(refImage.cols*.95,imgRows[i]+top),CV_FONT_NORMAL,1,Scalar(255,20,10));
      m++;
     }
-   line(refImage,Point(0,top),Point(refImage.cols-1,top),Scalar(255,0,0),2);
-   line(refImage,Point(0,bottom),Point(refImage.cols-1,bottom),Scalar(255,0,0),2);
+   //line(refImage,Point(0,top),Point(refImage.cols-1,top),Scalar(255,0,0),2);
+   //line(refImage,Point(0,bottom),Point(refImage.cols-1,bottom),Scalar(255,0,0),2);
    //imshow("",scoresBlock);
    result.push_back(top);
    result.push_back(bottom);
@@ -210,9 +250,9 @@ std::vector<int> imageAnalysis::makeHistogram(const Mat &scoresBlock){
     }
     out.push_back(textInterval[0]);
     out.push_back(textInterval[1]);
-    line(refImage,Point(textInterval[0],0),Point(textInterval[0],MaxHeight),Scalar(255,0,255),3);
-    line(refImage,Point(textInterval[1],0),Point(textInterval[1],MaxHeight),Scalar(255,0,255),3);
-    line(hist,Point(0,finalValue),Point(scoresBlock.cols,finalValue),Scalar(0,100,255));
+    //line(refImage,Point(textInterval[0],0),Point(textInterval[0],MaxHeight),Scalar(255,0,255),3);
+    //line(refImage,Point(textInterval[1],0),Point(textInterval[1],MaxHeight),Scalar(255,0,255),3);
+    //line(hist,Point(0,finalValue),Point(scoresBlock.cols,finalValue),Scalar(0,100,255));
     return out;
 }
 
@@ -232,7 +272,7 @@ vector<int> imageAnalysis::findRows(const Mat &scoresBlock){
     width = sum(scoresBlock.row(i))[0]/255;
     nextWidth = sum(scoresBlock.row(i+1))[0]/255;
 
-    if((width>=avg && nextWidth<avg) || (width<avg && nextWidth>=avg)){
+    if(((width>=avg && nextWidth<avg) || (width<avg && nextWidth>=avg)) && width!=scoresBlock.cols){
         candidates.push_back(i);
     }
 

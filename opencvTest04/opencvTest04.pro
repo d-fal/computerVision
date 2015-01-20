@@ -15,11 +15,15 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     imageanalysis.cpp \
-    characterrecognition.cpp
+    characterrecognition.cpp \
+    readcharacterdata.cpp \
+    comparenumber.cpp
 
 HEADERS  += mainwindow.h \
     imageanalysis.h \
-    characterrecognition.h
+    characterrecognition.h \
+    readcharacterdata.h \
+    comparenumber.h
 
 FORMS    += mainwindow.ui
 INCLUDEPATH += C:\OpenCV\myBuild\install\include

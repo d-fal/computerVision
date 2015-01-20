@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
         humomments  hu;
 
         //cout<<ocr.charRecognition(img)<<endl;
-        imageRGB=imread("C:\\example\\test\\test_4.jpg");
+        imageRGB=imread("C:\\example\\test\\test_1.jpg");
         cv::resize(imageRGB,imageRGB,Size(1400,1000),0,0);
         image=imageRGB.clone();
         medianBlur(image,image,3);
@@ -399,6 +399,7 @@ void MainWindow::on_pushButton_7_clicked()
 {
 
        characterRecognition ocr;
+
 int maxIndex;
 for(int k=0;k<=9;++k){
         QString address="C:\\example\\samples\\img_"+QString::number(k)+".png";
@@ -425,6 +426,7 @@ void MainWindow::on_pushButton_8_clicked()
         QString path="C:\\example\\Training\\"+QString::number(i)+"\\s"+QString::number(j)+".png";
 
         Mat img=imread(path.toStdString(),0);
+        cout<<path.toStdString()<<endl;
         cv::Mat result1(1,ATTRIBUTES,CV_32F);
 
         rdChar.removeWhitespaces(img,img);
@@ -457,11 +459,11 @@ void MainWindow::on_pushButton_9_clicked()
 {
 
 
-         for(int i=0;i<=5;++i){
+         for(int i=0;i<=9;++i){
 
 
-       for (int k=47;k<=300;++k){
-           QString path="C:\\example\\Training\\"+QString::number(i)+"\\s"+QString::number((int)46*rand()/RAND_MAX)+".png";
+       for (int k=101;k<=300;++k){
+           QString path="C:\\example\\Training\\"+QString::number(i)+"\\s"+QString::number((int)100*rand()/RAND_MAX)+".png";
            Mat img=imread(path.toStdString(),0);
            QString path2="C:\\example\\Training\\"+QString::number(i)+"\\s"+QString::number(k)+".png";
            imwrite(path2.toStdString(),img);

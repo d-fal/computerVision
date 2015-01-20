@@ -26,6 +26,7 @@ private:
     cv::Mat image;
     cv::Mat refImage;
     cv::Mat photoID;
+    cv::Mat idField;
 
     float refVAspect;
     float refHAspect;

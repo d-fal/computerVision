@@ -21,7 +21,7 @@
 #include <windows.h>
 
 //#define TRAINING_SAMPLES 3050       //Number of samples in training dataset
-#define ATTRIBUTES 256  //Number of pixels per sample.16X16
+#define ATTRIBUTES 400  //Number of pixels per sample.16X16
 //#define TEST_SAMPLES 1170       //Number of samples in test dataset
 #define CLASSES 10                  //Number of distinct labels.
 #define TRAINING_SAMPLES 4600       //Number of samples in training dataset

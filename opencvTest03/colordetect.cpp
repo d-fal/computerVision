@@ -83,6 +83,7 @@ std::vector<int> colorDetect::verticalLines(cv::Mat const &image){
     color[1]=200;
     color[2]=100;
     //bool flag=false;
+    blur(image2,image2,Size(9,9));
     while(it!=lines.end()){
         Vec4i val=*it;
 
@@ -91,14 +92,15 @@ std::vector<int> colorDetect::verticalLines(cv::Mat const &image){
         float angle=atan2(val[3]-val[1],val[2]-val[0])*180/PI;
         float length=sqrt(pow(val[2]-val[0],2)+pow(val[3]-val[1],2));
         if((angle<=-80 || angle>=85) && length>image.cols/4){
-        //line(image2,Point(val[0],0),Point(val[0],image2.rows),(0,255,255),1,8);
+        line(image2,Point(val[0],0),Point(val[0],image2.rows),(0,255,255),1,8);
         result.push_back(val[0]);
         }
 
         ++it;
 
     }
-//imshow("Lines",image2);
+
+imshow("Lines",image2);
 return result;
 
 }

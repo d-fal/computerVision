@@ -1,0 +1,5 @@
+QMAKE_PRL_BUILD_DIR = C:/Users/Davood/Documents/GitHub/computerVision/rs232_qext_test/build-qextserialport-Desktop_Qt_5_3_MinGW_32bit-Debug
+QMAKE_PRO_INPUT = qextserialport.pro
+QMAKE_PRL_TARGET = Qt5ExtSerialPortd
+QMAKE_PRL_CONFIG = lex yacc debug exceptions depend_includepath testcase_targets import_plugins import_qpa_plugin incremental_off windows qt warn_on link_prl debug_and_release debug_and_release_target precompile_header shared rtti no_plugin_manifest qpa win32 mingw gcc debug DebugBuild Debug build_pass debug debug DebugBuild Debug build_pass create_prl shared debug_and_release build_all debug DebugBuild Debug build_pass have_target dll exclusive_builds debug_info no_autoqmake thread opengl moc resources
+QMAKE_PRL_VERSION = 1
